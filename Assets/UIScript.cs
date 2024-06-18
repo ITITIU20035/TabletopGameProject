@@ -37,21 +37,20 @@ public class UIScript : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                yield break; // Exit the coroutine if space is pressed
+                yield break;
             }
 
             timer += Time.deltaTime;
             yield return null;
         }
-
-        // Activate the spacePressUI GameObject after 10 seconds
-        spacePressUI.SetActive(true);
+        if(!reachLastTile){
+            spacePressUI.SetActive(true);
+        }
+        
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // This is just to ensure the UI element is reset for the next interaction
         if (spacePressUI.activeSelf && Input.GetKeyDown(KeyCode.Space))
         {
             spacePressUI.SetActive(false);

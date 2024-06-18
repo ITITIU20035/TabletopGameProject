@@ -78,7 +78,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7976734987286293991, guid: dc5c3433ca3621b45bf19ba22e85601f, type: 3}
       propertyPath: m_TagString
-      value: Bonus Tile
+      value: Bonus
       objectReference: {fileID: 0}
     - target: {fileID: 8556908656830761544, guid: dc5c3433ca3621b45bf19ba22e85601f, type: 3}
       propertyPath: m_CollisionDetection

@@ -23,6 +23,13 @@ public class Player : MonoBehaviour
     public event EventHandler OnReachedLastTile;
     public event EventHandler OnPlayerStoppedMoving;
     [SerializeField] public DiceRoller diceRoller;
+    Vector3[] directions = {
+        Vector3.down,
+        Vector3.forward,
+        Vector3.back,
+        Vector3.left,
+        Vector3.right
+    };
     private void Start(){
         Dice.OnDiceStopRolling += Dice_OnDiceStopRolling;
         OnCollideWithFailTile += Player_OnCollideWithFailTile;
@@ -62,8 +69,8 @@ public class Player : MonoBehaviour
         isMoving = false;
         OnPlayerStoppedMoving?.Invoke(this,EventArgs.Empty);
         moveBackward = false;
+        CheckTiles();
         rb.isKinematic = true;// The player model falls down the rock tile so raycast can't detect which tile the player's on so this is a workaround
-        CheckTileBelow();
     }
     bool MoveToNextTile(Vector3 destination){
         return destination != (transform.position = Vector3.MoveTowards(transform.position,destination,2f*Time.deltaTime));
@@ -80,22 +87,30 @@ public class Player : MonoBehaviour
             }
         }
     }
-    private void CheckTileBelow(){
-        RaycastHit hit;
-        if(Physics.Raycast(transform.position, Vector3.down, out hit,raycastMaxDistance)){
-            Tile tile = hit.collider.GetComponent<Tile>();
-            if(tile != null && tile != currentTile){
-                currentTile = tile;
-                if(currentTile.CompareTag("Bonus")){
-                    Debug.Log("Player is on Bonus Tile");
-                    OnCollideWithBonusTile?.Invoke(this, EventArgs.Empty); //currently there's no turn so this event doesn't do anything
-                }else if(currentTile.CompareTag("Fail")){
-                    Debug.Log("Player is on Fail Tile");
-                    OnCollideWithFailTile?.Invoke(this, EventArgs.Empty);
+    private void CheckTiles(){
+        foreach (Vector3 direction in directions){
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, direction, out hit, raycastMaxDistance))
+            {
+                Tile tile = hit.collider.GetComponent<Tile>();
+                if (tile != null && tile != currentTile)
+                {
+                    currentTile = tile;
+                    if (currentTile.CompareTag("Bonus"))
+                    {
+                        Debug.Log("Player is on Bonus Tile");
+                        OnCollideWithBonusTile?.Invoke(this, EventArgs.Empty);
+                    }
+                    else if (currentTile.CompareTag("Fail"))
+                    {
+                        Debug.Log("Player is on Fail Tile");
+                        OnCollideWithFailTile?.Invoke(this, EventArgs.Empty);
+                    }
                 }
             }
         }
-        if (pathIndex >= currentPath.tileList.Count - 1){
+        if (pathIndex >= currentPath.tileList.Count - 1)
+        {
             OnReachedLastTile?.Invoke(this, EventArgs.Empty);
             Debug.Log("Player has reached the last tile.");
             steps = 0;
