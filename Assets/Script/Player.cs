@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
@@ -20,6 +21,7 @@ public class Player : MonoBehaviour
     public event EventHandler OnCollideWithBonusTile;
     public event EventHandler OnCollideWithFailTile;
     public event EventHandler OnReachedLastTile;
+    public event EventHandler OnPlayerStoppedMoving;
     [SerializeField] public DiceRoller diceRoller;
     private void Start(){
         Dice.OnDiceStopRolling += Dice_OnDiceStopRolling;
@@ -58,6 +60,7 @@ public class Player : MonoBehaviour
             }
         }
         isMoving = false;
+        OnPlayerStoppedMoving?.Invoke(this,EventArgs.Empty);
         moveBackward = false;
         rb.isKinematic = true;// The player model falls down the rock tile so raycast can't detect which tile the player's on so this is a workaround
         CheckTileBelow();

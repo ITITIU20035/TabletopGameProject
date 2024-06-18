@@ -359,6 +359,7 @@
 "Assets/Script/Player.cs"
 "Assets/Script/ScoreManager.cs"
 "Assets/Script/Tile.cs"
+"Assets/UIScript.cs"
 -langversion:9.0
 
 /deterministic
